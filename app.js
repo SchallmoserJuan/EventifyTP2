@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3000;
 */
 
 const server = app.listen(PORT, () => {
-  console.log(`🚀 Servidor de Infraestructura (Persona 1) corriendo en http://localhost:${PORT}`);
+  console.log(` Servidor de Eventify corriendo en http://localhost:${PORT}`);
 });
 
 /*
