@@ -2,11 +2,17 @@ import express from "express";
 import mongoose from "mongoose";
 import "./src/config/database.js"; 
 
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
+app.set("view engine", "pug");
+app.set("views", path.join(__dirname, "src/views"));
+
 /*
- * Espacio para importacion de rutas / middlewares / pug
+ * Espacio para importacion de rutas / middlewares
 */
 
 const server = app.listen(PORT, () => {
