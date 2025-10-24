@@ -1,11 +1,19 @@
 import express from "express";
 import mongoose from "mongoose";
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
+import path from 'path';
 import "./src/config/database.js"; 
+import eventRoutes from "./src/routes/eventRoutes.js";
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 const app = express();
+
+app.use(express.json());
+app.use("/api/events", eventRoutes);
+
 const PORT = process.env.PORT || 3000;
 
 app.set("view engine", "pug");
