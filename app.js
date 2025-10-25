@@ -14,7 +14,6 @@ import tareaApiRoutes from "./src/routes/tareaApiRoutes.js";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-// esto ya esta subido
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -70,7 +69,6 @@ app.use((req, res) => {
   });
 });
 
-// esto ya esta subido
 app.listen(PORT, () => {
   console.log(` Servidor Eventify corriendo en http://localhost:${PORT}`);
   console.log(` Entorno: ${process.env.NODE_ENV || "development"}`);
