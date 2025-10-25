@@ -1,21 +1,24 @@
 import express from "express";
-import mongoose from "mongoose";
-import { fileURLToPath } from 'url';
-import { dirname } from 'path';
-import path from 'path';
-import "./src/config/database.js"; 
-import eventRoutes from "./src/routes/eventRoutes.js";
+import path from "path";
+import { fileURLToPath } from "url";
+import methodOverride from "method-override";
+import "./src/config/database.js"; // 
 
+// CARLOS -> Importar rutas
+import empleadoRoutes from "./src/routes/empleadoRoutes.js";
+import tareaRoutes from "./src/routes/tareaRoutes.js";
+import empleadoApiRoutes from "./src/routes/empleadoApiRoutes.js";
+import tareaApiRoutes from "./src/routes/tareaApiRoutes.js";
+
+// SOFIA -> Configurar __dirname
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// esto ya esta subido
 const app = express();
-
-app.use(express.json());
-app.use("/api/events", eventRoutes);
-
 const PORT = process.env.PORT || 3000;
 
+// SOFIA -> Configuración de Pug
 app.set("view engine", "pug");
 app.set("views", path.join(__dirname, "src/views"));
 
@@ -30,6 +33,22 @@ app.use((req, res, next) => {
   console.log(`${new Date().toISOString()} - ${req.method} ${req.url}`);
   next();
 });
+
+// CARLOS -> Rutas principales
+app.get("/", (req, res) => {
+  res.render("index", {
+    titulo: "Eventify - Sistema de Gestión de Eventos",
+    mensaje:
+      "Bienvenido al sistema de gestión integral de eventos (MongoDB Edition)",
+  });
+});
+
+// CARLOS -> Rutas de empleados
+app.use("/empleados", empleadoRoutes);
+// CARLOS -> Rutas de tareas
+app.use("/tareas", tareaRoutes);
+app.use("/api/empleados", empleadoApiRoutes); // Ruta API para empleados
+app.use("/api/tareas", tareaApiRoutes); // Ruta API para tareas
 
 // NAHIR -> Middleware de manejo de errores
 app.use((err, req, res, next) => {
@@ -51,30 +70,10 @@ app.use((req, res) => {
   });
 });
 
-
-const server = app.listen(PORT, () => {
-  console.log(` Servidor de Eventify corriendo en http://localhost:${PORT}`);
+// esto ya esta subido
+app.listen(PORT, () => {
+  console.log(` Servidor Eventify corriendo en http://localhost:${PORT}`);
+  console.log(` Entorno: ${process.env.NODE_ENV || "development"}`);
 });
-
-/*
- * apagado ordenado del servidor
- */
-const gracefulShutdown = () => {
-  console.log("...Recibida señal de apagado (SIGINT/SIGTERM), cerrando servidor ordenadamente...");
-
-  // 1. Dejar de aceptar nuevas conexiones
-  server.close(() => {
-    console.log("Servidor Express cerrado.");
-
-    // 2. Cerrar la conexión de Mongoose 
-    mongoose.connection.close(false, () => {
-      console.log("Conexión de Mongoose cerrada.");
-      process.exit(0);
-    });
-  });
-};
-
-process.on("SIGTERM", gracefulShutdown); // Señal de apagado 
-process.on("SIGINT", gracefulShutdown); // Señal de interrupción 
 
 export default app;
